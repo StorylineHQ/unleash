@@ -50,6 +50,7 @@ jobs:
           # Build the custom Docker image using the static Dockerfile.storyline
           docker build \
             --platform linux/amd64 \
+            --build-arg UNLEASH_URL="https://unleash.dev.storyline.com/" \
             -f Dockerfile.storyline \
             -t ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG} \
             -t ${ECR_REGISTRY}/${ECR_REPOSITORY}:${GITHUB_SHA} \
