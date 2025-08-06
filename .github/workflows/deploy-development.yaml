@@ -5,7 +5,6 @@ on:
       - development
 
 env:
-  AWS_ACCOUNT_ID: 699214391223
   AWS_REGION: us-east-1
 
 jobs:
@@ -44,7 +43,7 @@ jobs:
       - name: Build and push Docker image
         run: |
           ECR_REPOSITORY="stry-unleash-dev"
-          ECR_REGISTRY="${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com"
+          ECR_REGISTRY="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com"
           IMAGE_TAG="latest"
           
           # Build the custom Docker image using the static Dockerfile.storyline
