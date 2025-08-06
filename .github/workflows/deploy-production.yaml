@@ -1,0 +1,69 @@
+name: Deploy to Production
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_REGION: us-east-1
+
+jobs:
+  deploy-unleash-prod:
+    name: Build and Deploy Unleash Production
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.PROD_DEPLOY_GITHUB_OIDC_IAM_ROLE }}
+          aws-region: ${{ env.AWS_REGION }}
+
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build base Unleash image
+        run: |
+          # Build the base Unleash image using the existing Dockerfile
+          docker build \
+            --platform linux/amd64 \
+            -t unleash-base:latest \
+            .
+          
+          echo "Base Unleash image built successfully"
+
+
+      - name: Build and push Docker image
+        run: |
+          ECR_REPOSITORY="stry-unleash-prod"
+          ECR_REGISTRY="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com"
+          IMAGE_TAG="latest"
+          
+          # Build the custom Docker image using the static Dockerfile.storyline
+          docker build \
+            --platform linux/amd64 \
+            --build-arg UNLEASH_URL="https://unleash.storyline.com/" \
+            -f Dockerfile.storyline \
+            -t ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG} \
+            -t ${ECR_REGISTRY}/${ECR_REPOSITORY}:${GITHUB_SHA} \
+            .
+          
+          # Push both tags
+          docker push ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
+          docker push ${ECR_REGISTRY}/${ECR_REPOSITORY}:${GITHUB_SHA}
+          
+          echo "ECR_REPOSITORY=$ECR_REPOSITORY" >> $GITHUB_ENV
+          echo "ECR_REGISTRY=$ECR_REGISTRY" >> $GITHUB_ENV
+
+      - name: Verify Deployment
+        run: |
+          echo "Deployment completed successfully!"
+          echo "Image pushed to: ${ECR_REGISTRY}/${ECR_REPOSITORY}:${GITHUB_SHA}"
+          echo "Production deployment completed!"
