@@ -4,9 +4,6 @@ on:
     branches:
       - main
 
-env:
-  AWS_REGION: us-east-1
-
 jobs:
   deploy-unleash-prod:
     name: Build and Deploy Unleash Production
@@ -22,7 +19,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.PROD_DEPLOY_GITHUB_OIDC_IAM_ROLE }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
 
       - name: Login to Amazon ECR
@@ -43,7 +40,7 @@ jobs:
       - name: Build and push Docker image
         run: |
           ECR_REPOSITORY="stry-unleash-prod"
-          ECR_REGISTRY="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com"
+          ECR_REGISTRY="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com"
           IMAGE_TAG="latest"
           
           # Build the custom Docker image using the static Dockerfile.storyline
