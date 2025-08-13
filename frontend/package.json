@@ -139,7 +139,8 @@
     "semver": "7.7.2",
     "ws": "^8.18.0",
     "@types/react": "18.3.23",
-    "brace-expansion": "2.0.2"
+    "brace-expansion": "2.0.2",
+    "tmp": "0.2.4"
   },
   "jest": {
     "moduleNameMapper": {
