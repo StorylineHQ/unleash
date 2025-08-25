@@ -200,17 +200,18 @@
     "brace-expansion": "2.0.2",
     "@wesleytodd/openapi/path-to-regexp": "6.3.0",
     "router/path-to-regexp": "1.9.0",
-    "prompt": "link:./node_modules/.cache/null"
+    "prompt": "link:./node_modules/.cache/null",
+    "npm-sha.js": "2.4.12"
   },
   "lint-staged": {
     "*.{js,ts}": [
-      "yarn biome check --write --no-errors-on-unmatched"
+      "npx biome check --write --no-errors-on-unmatched"
     ],
     "*.{jsx,tsx}": [
-      "yarn biome check --write --no-errors-on-unmatched"
+      "npx biome check --write --no-errors-on-unmatched"
     ],
     "*.json": [
-      "yarn biome format --write --no-errors-on-unmatched"
+      "npx biome format --write --no-errors-on-unmatched"
     ]
   },
   "packageManager": "yarn@4.9.2"
