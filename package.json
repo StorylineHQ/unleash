@@ -205,13 +205,13 @@
   },
   "lint-staged": {
     "*.{js,ts}": [
-      "npx biome check --write --no-errors-on-unmatched"
+      "yarn biome check --write --no-errors-on-unmatched"
     ],
     "*.{jsx,tsx}": [
-      "npx biome check --write --no-errors-on-unmatched"
+      "yarn biome check --write --no-errors-on-unmatched"
     ],
     "*.json": [
-      "npx biome format --write --no-errors-on-unmatched"
+      "yarn biome format --write --no-errors-on-unmatched"
     ]
   },
   "packageManager": "yarn@4.9.2"
