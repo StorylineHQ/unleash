@@ -41,9 +41,8 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::726824350591:role/unleash-github-ecr-public-publish-role
-          role-session-name: unleash-actions-push-to-ecr-public
-          aws-region: us-east-1
+          role-to-assume: ${{ secrets.DOCKER_PUBLISH_GITHUB_OIDC_IAM_ROLE }}
+          aws-region: ${{ secrets.AWS_REGION }}
       - name: Login to AWS ECR
         id: login-ecr-public
         uses: aws-actions/amazon-ecr-login@v2
