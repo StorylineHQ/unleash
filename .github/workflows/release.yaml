@@ -16,6 +16,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
 
     strategy:
       matrix:
@@ -43,11 +46,10 @@ jobs:
           npm publish --tag ${TAG:-latest}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - uses: aws-actions/configure-aws-credentials@v2
+      - uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+          role-to-assume: ${{ secrets.AWS_GITHUB_OIDC_IAM_ROLE }}
+          aws-region: ${{ secrets.AWS_REGION }}
       - name: Publish static assets to S3
         run: |
-          aws s3 cp frontend/build s3://getunleash-static/unleash/v${{ inputs.version }} --recursive
+          aws s3 cp frontend/build s3://${{ secrets.S3_STATIC_BUCKET }}/unleash/v${{ inputs.version }} --recursive

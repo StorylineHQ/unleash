@@ -1,0 +1,28 @@
+# Extends the base Unleash image
+# Database credentials should be injected at runtime via ECS Task Definitions
+
+FROM unleash-base:latest
+
+USER root
+
+ARG UNLEASH_URL
+
+ENV PORT=8000
+ENV HTTP_PORT=8000
+ENV LOG_LEVEL=info
+ENV DATABASE_SSL=false
+ENV DATABASE_NAME=unleash
+ENV DATABASE_PORT=5432
+ENV UNLEASH_URL=${UNLEASH_URL}
+
+RUN echo '#!/bin/sh' > /entrypoint.sh && \
+    echo 'export PORT=8000' >> /entrypoint.sh && \
+    echo 'export HTTP_PORT=8000' >> /entrypoint.sh && \
+    echo 'exec node dist/server.js' >> /entrypoint.sh && \
+    chmod +x /entrypoint.sh
+
+EXPOSE 8000
+
+USER node
+
+ENTRYPOINT ["/entrypoint.sh"]
