@@ -200,7 +200,8 @@
     "brace-expansion": "2.0.2",
     "@wesleytodd/openapi/path-to-regexp": "6.3.0",
     "router/path-to-regexp": "1.9.0",
-    "prompt": "link:./node_modules/.cache/null"
+    "prompt": "link:./node_modules/.cache/null",
+    "esbuild": "^0.25.0"
   },
   "lint-staged": {
     "*.{js,ts}": [
